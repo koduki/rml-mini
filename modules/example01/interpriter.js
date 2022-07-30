@@ -1,3 +1,3 @@
 export function evaluate(text) {
-    return text;
+  return text;
 }
