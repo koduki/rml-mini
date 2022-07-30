@@ -1,0 +1,29 @@
+<program> --> program <indent>;[funclist] [<declist>]  begin <statlist> end
+<funclist> --> <function>+
+<funcdef> --> function <ident>"(" (<ident>:<ident>)* ")":<ident>;[<declist>] begin <statlist> end
+<funccall> --> <ident> "(" <expression> ")"
+<declist> --> var (<ident> : <type>;) +
+<statlist> --> <statement>(; <statement>)*
+<statement> --> <funccall>
+                <ident> :=  <expression>
+                <if> <relation> then <statment> else <statement>
+                <while> <relation> do <statment> end
+                <block>
+<block> --> begin <statlist> end
+<relation> --> <expression> <rel_op> <expression>
+<rel_op> --> > | < | = | <>| <= | >= |
+<expression> --> <expression> <add_op> <term> | <term>
+<term> --> <term> <mul_op> <factor> | <factor>
+<factor> --> <literal> | "(" <expression> ")" | <funccall>
+<literal> --> <ident> | <number> | <string>
+<number> --> [<unary_op>] NUMBER
+<unary_op> --> + | -
+<add_op> --> + | -
+<mul_op> --> * | / | %
+<literal> --> <ident> | <integer> | <string>
+<integer> --> <digit>+
+<string> --> "<any charactor>"
+<indent> --> <latter>(<latter> | <digit>)*
+<type> --> Integer, String
+<latter> --> a-zA-Z
+<digit> --> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
