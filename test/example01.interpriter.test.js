@@ -5,3 +5,7 @@ Deno.test("evaluate #1", () => {
   const actual = Interpriter.evaluate('puts "Hello World"');
   assertEquals(actual, "Hello World");
 });
+Deno.test("evaluate #2", () => {
+  const actual = Interpriter.evaluate('puts "Hello World2"');
+  assertEquals(actual, "Hello World2");
+});
