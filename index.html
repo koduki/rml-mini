@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playground</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+</head>
+
+<body>
+  <h1>Playground</h1>
+
+  <div id="playground">
+    <nav>
+      <button id="bnt-run">Run</button>
+      <button id="btn-clear">Clear</button>
+    </nav>
+    <textarea id="editor" rows="24">puts "Hello World"</textarea>
+    <pre id="output">
+        <label>Output: </label>
+        <code></code>
+      </pre>
+  </div>
+</body>
+<style>
+  body {
+    max-width: 1200px;
+  }
+
+  #playground {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+  }
+
+  #playground nav {
+    grid-column: 1 / 4;
+  }
+
+  #editor {
+    grid-column: 1 / 3;
+  }
+
+  #output {
+    grid-column: 3 / 4;
+  }
+
+  #output label {
+    margin-top: -20px;
+    margin-bottom: 0px;
+    margin-left: -40px;
+  }
+
+  #output code {
+    margin-top: -20px;
+  }
+</style>
+
+<script type="module">
+  import * as Interpriter from './modules/example01/interpriter.js';
+
+  const bnt_run = document.querySelector("#bnt-run");
+  const btn_clear = document.querySelector("#btn-clear");
+  const editor = document.querySelector("#editor");
+  const output = document.querySelector("#output code");
+
+  bnt_run.addEventListener("click", e => {
+    const r = Interpriter.evaluate(editor.value)
+    output.textContent += r + "\n";
+  });
+  btn_clear.addEventListener("click", e => {
+    output.textContent = "";
+  });
+</script>
+
+</html>
