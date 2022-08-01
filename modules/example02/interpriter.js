@@ -1,10 +1,10 @@
 export function evaluate(text) {
-  const tokens = parse(text);
-  let r;
+  const sc = new Scanner(text);
 
-  const num1 = parseInt(tokens[0]);
-  const num2 = parseInt(tokens[2]);
-  const op = tokens[1];
+  let r;
+  const num1 = parseInt(sc.peek());
+  const op = sc.next();
+  const num2 = parseInt(sc.next());
   switch (op) {
     case "+":
       r = num1 + num2;
@@ -21,6 +21,16 @@ export function evaluate(text) {
   return r.toString();
 }
 
-export function parse(text) {
-  return text.match(/[^\s]+/g);
+export class Scanner {
+  constructor(text) {
+    this.tokens = text.trim().split(/ /);
+    this.pos = 0;
+  }
+  peek() {
+    return this.tokens[this.pos];
+  }
+  next() {
+    this.pos += 1;
+    return this.tokens[this.pos];
+  }
 }

@@ -1,9 +1,14 @@
 import { assertEquals } from "https://deno.land/std@0.94.0/testing/asserts.ts";
 import * as Interpriter from "./interpriter.js";
 
-Deno.test("evaluate: 1 + 1 = 2", () => {
-  const actual = Interpriter.evaluate("1 + 1");
-  assertEquals(actual, "2");
+Deno.test("evaluate: 1 + 3 = 4", () => {
+  const actual = Interpriter.evaluate("1 + 2");
+  assertEquals(actual, "3");
+});
+
+Deno.test("evaluate: 1 + 2 + 3= 6", () => {
+  const actual = Interpriter.evaluate("1 + 2 + 3");
+  assertEquals(actual, "6");
 });
 
 Deno.test("evaluate: 10 - 30 = -20", () => {
