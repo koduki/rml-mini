@@ -1,0 +1,23 @@
+fn main() {
+    fizzbuzz(1, 100)
+}
+
+fn fizzbuzz(start, end) {
+    var i = start;
+    while(true){
+        if (i < end) {
+            break;
+        }
+
+        if(i % 15 == 0){
+            print("FizzBuzz");
+        }else if(i % 3 == 0){
+            print("Fizz");
+        }else if(i % 5 == 0){
+            print("Buzz");
+        }else 
+            print(i);
+        }
+        i = i + 1;
+    }
+}

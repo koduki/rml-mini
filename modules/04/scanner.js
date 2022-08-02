@@ -1,6 +1,4 @@
-export const $ = (type, value = null) => {
-  return { type: type, value: value };
-};
+import { $ } from "./util.js";
 
 export class Scanner {
   constructor(text) {
@@ -11,12 +9,6 @@ export class Scanner {
         const x = text[idx];
         if (x === " ") { // skip
           idx += 1;
-        } else if ((/\d/).test(x)) { // scan-int
-          let num = "";
-          for (; (/\d/).test(text[idx]); idx++) {
-            num += text[idx];
-          }
-          tokens.push($("INT", parseInt(num)));
         } else if (x === "+" || x === "-") {
           tokens.push($("ADD_OP", x));
           idx += 1;
@@ -26,6 +18,12 @@ export class Scanner {
         } else if (x === "(" || x === ")") {
           tokens.push($("PARENTHES", x));
           idx += 1;
+        } else if ((/\d/).test(x)) { // scan-int
+          let num = "";
+          for (; (/\d/).test(text[idx]); idx++) {
+            num += text[idx];
+          }
+          tokens.push($("INT", parseInt(num)));
         }
       }
       return tokens;

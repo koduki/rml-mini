@@ -23,6 +23,24 @@
       </pre>
   </div>
 </body>
+
+<script type="module">
+  import * as Interpriter from './modules/02/interpriter.js';
+
+  const bnt_run = document.querySelector("#bnt-run");
+  const btn_clear = document.querySelector("#btn-clear");
+  const editor = document.querySelector("#editor");
+  const output = document.querySelector("#output code");
+
+  bnt_run.addEventListener("click", e => {
+    const r = Interpriter.evaluate(editor.value)
+    output.textContent += r + "\n";
+  });
+  btn_clear.addEventListener("click", e => {
+    output.textContent = "";
+  });
+</script>
+
 <style>
   body {
     max-width: 1200px;
@@ -56,22 +74,5 @@
     margin-top: -20px;
   }
 </style>
-
-<script type="module">
-  import * as Interpriter from './modules/example02/interpriter.js';
-
-  const bnt_run = document.querySelector("#bnt-run");
-  const btn_clear = document.querySelector("#btn-clear");
-  const editor = document.querySelector("#editor");
-  const output = document.querySelector("#output code");
-
-  bnt_run.addEventListener("click", e => {
-    const r = Interpriter.evaluate(editor.value)
-    output.textContent += r + "\n";
-  });
-  btn_clear.addEventListener("click", e => {
-    output.textContent = "";
-  });
-</script>
 
 </html>
