@@ -41,7 +41,7 @@ export class Scanner {
         case word == "%":
           return $("OP_MUL", word);
         case word == "=":
-          return $("SET", word);
+          return $("ASSIGN", word);
         case word == ";":
           return $("SEMICOLON", word);
         case word == ",":
@@ -55,7 +55,7 @@ export class Scanner {
         case (/"(.*)"/).test(word):
           return $("STRING", word.match(/"(.*)"/)[1]);
         default:
-          return $("INDENT", word);
+          return $("IDENT", word);
       }
     };
     const split = (text) => {

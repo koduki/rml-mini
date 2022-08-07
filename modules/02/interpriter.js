@@ -15,6 +15,9 @@ export function evaluate(text) {
     case "*":
       r = num1 * num2;
       break;
+    case "/":
+      r = num1 / num2;
+      break;
     default:
       r = undefined;
   }

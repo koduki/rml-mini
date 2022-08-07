@@ -11,7 +11,8 @@ export function parse(sc) {
     sc.next();
     if (token.type != type) {
       throw new Error(
-        "Syntax Error:type=" + type + ", token.type=" + token.type,
+        "Syntax Error:expect.type=" + type + ", actual.type=" + token.type +
+          ", token.value=" + token.value,
       );
     }
     return token;

@@ -11,7 +11,7 @@ export function parse(sc) {
     sc.next();
     if (token.type != type) {
       throw new Error(
-        "Syntax Error:type=" + type + ", token.type=" + token.type +
+        "Syntax Error:expect.type=" + type + ", actual.type=" + token.type +
           ", token.value=" + token.value,
       );
     }
@@ -29,7 +29,7 @@ export function parse(sc) {
   const funcdef = () => {
     const _funcdef = [];
     _funcdef.push(take("FUNCDEF"));
-    _funcdef.push([take("INDENT")]);
+    _funcdef.push([take("IDENT")]);
     take("PARENTHES_OPEN");
     _funcdef.push(funcargs());
     take("PARENTHES_CLOSE");
@@ -41,19 +41,12 @@ export function parse(sc) {
 
   const funcargs = () => {
     const _funcargs = [];
-    if (match("INDENT")) {
-      while (match("INDENT")) {
-        //
-      }
-    } else {
-      _funcargs.push([$("INDENT", null)]);
-    }
     return _funcargs;
   };
 
   const statlist = () => {
     const _statlist = [];
-    while (match("INDENT")) {
+    while (match("IDENT")) {
       _statlist.push(statement());
     }
     return _statlist;
@@ -61,68 +54,22 @@ export function parse(sc) {
 
   const statement = () => {
     const _statement = [];
-    const name = take("INDENT");
-    _statement.push(funccall(name));
+    const name = take("IDENT");
+    _statement.push(call_func(name));
     take("SEMICOLON");
 
     return _statement;
   };
 
-  const funccall = (name) => {
+  const call_func = (name) => {
     const _funcall = [];
-    _funcall.push($("funccall"));
+    _funcall.push($("call_func"));
     _funcall.push([name]);
     take("PARENTHES_OPEN");
     _funcall.push([take("STRING")]);
     take("PARENTHES_CLOSE");
 
     return _funcall;
-  };
-
-  const expr = () => {
-    let _expr = term();
-    while (match("ADD_OP")) {
-      switch (take("ADD_OP").value) {
-        case "+":
-          _expr = [$("add"), _expr, term()];
-          break;
-        case "-":
-          _expr = [$("sub"), _expr, term()];
-          break;
-      }
-    }
-    return _expr;
-  };
-
-  const term = () => {
-    let _term = factor();
-    while (match("MUL_OP")) {
-      switch (take("MUL_OP").value) {
-        case "*":
-          _term = [$("mul"), _term, factor()];
-          break;
-        case "/":
-          _term = [$("div"), _term, factor()];
-          break;
-      }
-    }
-    return _term;
-  };
-
-  const factor = () => {
-    if (match("PARENTHES")) {
-      take("PARENTHES");
-      const _factor = expr();
-      take("PARENTHES");
-
-      return _factor;
-    }
-    return number();
-  };
-
-  const number = () => {
-    const _number = take("INT");
-    return [_number];
   };
 
   const ast = program();

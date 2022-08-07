@@ -11,11 +11,11 @@ Deno.test("Scanner: hello wolrd", () => {
   assertEquals(sc.is_not_end(), true);
 
   assertEquals(sc.peek(), $("FUNCDEF", "fn"));
-  assertEquals(sc.next(), $("INDENT", "main2"));
+  assertEquals(sc.next(), $("IDENT", "main2"));
   assertEquals(sc.next(), $("PARENTHES_OPEN", "("));
   assertEquals(sc.next(), $("PARENTHES_CLOSE", ")"));
   assertEquals(sc.next(), $("BEGIN", "{"));
-  assertEquals(sc.next(), $("INDENT", "print"));
+  assertEquals(sc.next(), $("IDENT", "print"));
   assertEquals(sc.next(), $("PARENTHES_OPEN", "("));
   assertEquals(sc.next(), $("STRING", "Hello World"));
   assertEquals(sc.next(), $("PARENTHES_CLOSE", ")"));

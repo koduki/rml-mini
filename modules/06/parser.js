@@ -21,7 +21,7 @@ export function parse(sc) {
     if (!r) {
       throw new Error(
         "Syntax Error:expect.type=" + type + ", actual.type=" + token.type +
-        ", token.value=" + token.value,
+          ", token.value=" + token.value,
       );
     }
 
@@ -40,7 +40,7 @@ export function parse(sc) {
   const funcdef = () => {
     const _funcdef = [];
     _funcdef.push(take("FUNCDEF"));
-    _funcdef.push([take("INDENT")]);
+    _funcdef.push([take("IDENT")]);
     take("PARENTHES_OPEN");
     _funcdef.push(funcargs());
     take("PARENTHES_CLOSE");
@@ -52,12 +52,9 @@ export function parse(sc) {
 
   const funcargs = () => {
     const _funcargs = [];
-    while (match("INT", "STRING", "BOOL", "INDENT", "COMMA")) {
-      if (match("INT", "STRING", "BOOL")) {
-        _funcargs.push(take("INT", "STRING", "BOOL"));
-      } else if (match("INDENT")) {
-        const token = take("INDENT");
-        _funcargs.push(token);
+    while (match("INT", "STRING", "BOOL", "IDENT", "COMMA")) {
+      if (match("INT", "STRING", "BOOL", "IDENT")) {
+        _funcargs.push(expr());
       } else {
         take("COMMA");
       }
@@ -69,8 +66,8 @@ export function parse(sc) {
     const _vardef = [];
 
     _vardef.push(take("VARDEF"));
-    _vardef.push([take("INDENT")]);
-    take("SET");
+    _vardef.push([take("IDENT")]);
+    take("ASSIGN");
     _vardef.push([expr()]);
 
     return _vardef;
@@ -78,7 +75,11 @@ export function parse(sc) {
 
   const statlist = () => {
     const _statlist = [];
-    for (let _statement = statement(); 0 < _statement.length; _statement = statement()) {
+    for (
+      let _statement = statement();
+      0 < _statement.length;
+      _statement = statement()
+    ) {
       _statlist.push(_statement);
     }
     return _statlist;
@@ -100,10 +101,10 @@ export function parse(sc) {
     } else if (match("RETURN")) {
       _statement.push([take("RETURN"), expr()]);
       take("SEMICOLON");
-    } else if (match("INDENT")) {
-      const name = take("INDENT");
-      if (match("SET")) {
-        _statement.push(set(name));
+    } else if (match("IDENT")) {
+      const name = take("IDENT");
+      if (match("ASSIGN")) {
+        _statement.push(assign(name));
       } else {
         _statement.push(call_func(name));
       }
@@ -116,7 +117,7 @@ export function parse(sc) {
   const call_func = (name) => {
     const _funcall = [];
     _funcall.push($("call_func"));
-    _funcall.push([name]);
+    _funcall.push(name);
     take("PARENTHES_OPEN");
     _funcall.push(funcargs());
     take("PARENTHES_CLOSE");
@@ -124,14 +125,14 @@ export function parse(sc) {
     return _funcall;
   };
 
-  const set = (name) => {
-    const _set = [];
+  const assign = (name) => {
+    const _assign = [];
 
-    _set.push(take("SET"));
-    _set.push([name]);
-    _set.push(expr());
+    _assign.push(take("ASSIGN"));
+    _assign.push([name]);
+    _assign.push(expr());
 
-    return _set;
+    return _assign;
   };
 
   const call_while = () => {
@@ -171,13 +172,13 @@ export function parse(sc) {
   const relation = () => {
     const arg1 = expr();
     if (match("OP_REL")) {
-      const op = take("OP_REL")
+      const op = take("OP_REL");
       const arg2 = expr();
-      return [op, arg1, arg2]
+      return [op, arg1, arg2];
     } else {
-      return [$("OP_REL", "direct"), arg1]
+      return [$("OP_REL", "direct"), arg1];
     }
-  }
+  };
 
   const expr = () => {
     let _expr = term();
@@ -225,8 +226,8 @@ export function parse(sc) {
   };
 
   const literal = () => {
-    const _literal = take("INT", "STRING", "BOOL", "INDENT");
-    if (_literal.type == "INDENT" && match("PARENTHES_OPEN")) {
+    const _literal = take("INT", "STRING", "BOOL", "IDENT");
+    if (_literal.type == "IDENT" && match("PARENTHES_OPEN")) {
       return call_func(_literal);
     }
     return [_literal];

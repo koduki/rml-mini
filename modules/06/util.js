@@ -2,6 +2,10 @@ export const $ = (type, value = null) => {
   return { type: type, value: value };
 };
 
+export function deepCopy(xs) {
+  return JSON.parse(JSON.stringify(xs));
+}
+
 export const show_tree = (tree) => {
   const _blank = (size) => {
     let blank = "";
@@ -18,7 +22,7 @@ export const show_tree = (tree) => {
         console.log(_blank(indent) + "],");
       }
     } else {
-      const obj = `{type: "${tree.type}", value: ${tree.value}}`
+      const obj = `{type: "${tree.type}", value: ${tree.value}}`;
       console.log(_blank(indent) + obj);
     }
   };

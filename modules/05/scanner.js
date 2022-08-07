@@ -19,7 +19,7 @@ export class Scanner {
         case (/"(.*)"/).test(word):
           return $("STRING", word.match(/"(.*)"/)[1]);
         default:
-          return $("INDENT", word);
+          return $("IDENT", word);
       }
     };
     const split = (text) => {
@@ -59,7 +59,6 @@ export class Scanner {
     };
 
     this.tokens = split(text);
-    console.log(this.tokens);
     this.pos = 0;
   }
 
