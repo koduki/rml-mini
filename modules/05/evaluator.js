@@ -1,3 +1,5 @@
+import Config from "./config.js";
+
 export class Evaluator {
   apply(ast) {
     const env = {
@@ -50,7 +52,10 @@ function eval_statement(env, ast) {
   throw new Error("Unkown Error");
 }
 
-function syscall_stdout(env, text) {
-  env.stdout.push(text);
-  console.log(env.stdout[env.stdout.length - 1]);
+function syscall_stdout(global, text) {
+  global.stdout.push(text);
+
+  if (Config.is_show_console()) {
+    console.log(global.stdout[global.stdout.length - 1]);
+  }
 }

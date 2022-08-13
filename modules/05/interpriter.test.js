@@ -1,5 +1,8 @@
 import { assertEquals } from "https://deno.land/std@0.94.0/testing/asserts.ts";
 import * as Interpriter from "./interpriter.js";
+import Config from "./config.js";
+
+Config.disable_console();
 
 Deno.test("eval: Hello World", () => {
   const actual = Interpriter.evaluate(`

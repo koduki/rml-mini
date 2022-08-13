@@ -1,4 +1,5 @@
 import { deepCopy } from "./util.js";
+import Config from "./config.js";
 
 export class Evaluator {
   apply(ast) {
@@ -211,5 +212,8 @@ function eval_call_func(global, env, ast) {
 
 function syscall_stdout(global, text) {
   global.stdout.push(text);
-  console.log(global.stdout[global.stdout.length - 1]);
+
+  if (Config.is_show_console()) {
+    console.log(global.stdout[global.stdout.length - 1]);
+  }
 }

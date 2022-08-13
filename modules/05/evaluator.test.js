@@ -1,5 +1,8 @@
 import { assertEquals } from "https://deno.land/std@0.94.0/testing/asserts.ts";
 import { Evaluator } from "./evaluator.js";
+import Config from "./config.js";
+
+Config.disable_console();
 
 Deno.test("apply: Hello World", () => {
   const actual = new Evaluator().apply([
