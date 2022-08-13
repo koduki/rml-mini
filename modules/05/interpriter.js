@@ -5,5 +5,5 @@ import * as Parser from "./parser.js";
 export function evaluate(text) {
   const sc = new Scanner(text);
   const ast = Parser.parse(sc);
-  return new Evaluator().apply(ast).toString();
+  return new Evaluator().apply(ast).stdout.join("\n");
 }

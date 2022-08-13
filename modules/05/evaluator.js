@@ -8,14 +8,14 @@ export class Evaluator {
     };
 
     // 評価を開始
-    eval_funclist(env, ast);
+    eval_prgram(env, ast);
     // mainと付いている関数をエントリポイントとして実行
     env.func_table["main"]();
     return env;
   }
 }
 
-function eval_funclist(env, ast) {
+function eval_prgram(env, ast) {
   for (let i = 0; i < ast.length; i++) {
     eval_funcdef(env, ast[i]);
   }
@@ -41,7 +41,7 @@ function eval_statement(env, ast) {
   const token = ast.shift();
 
   switch (token.type) {
-    case "funccall": {
+    case "call_func": {
       const name = ast.shift()[0].value;
       const args = ast.shift()[0].value;
       return env.func_table[name](args);

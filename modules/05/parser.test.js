@@ -14,7 +14,7 @@ Deno.test("parse: Hello World", () => {
     [
       { type: "FUNCDEF", value: "fn" },
       [{ type: "IDENT", value: "main" }],
-      [[{ type: "IDENT", value: null }]],
+      [],
       [
         [
           [
