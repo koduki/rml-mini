@@ -27,7 +27,7 @@ Deno.test("Scanner: hello wolrd", () => {
 Deno.test("Scanner: simple loop", () => {
   const sc = new Scanner(`
     fn main() {
-      var i = 0;
+      i = 0;
       while(true){
         if(10 <= i){
           break;
@@ -43,7 +43,6 @@ Deno.test("Scanner: simple loop", () => {
   assertEquals(sc.next(), $("PARENTHES_OPEN", "("));
   assertEquals(sc.next(), $("PARENTHES_CLOSE", ")"));
   assertEquals(sc.next(), $("BEGIN", "{"));
-  assertEquals(sc.next(), $("VARDEF", "var"));
   assertEquals(sc.next(), $("IDENT", "i"));
   assertEquals(sc.next(), $("ASSIGN", "="));
   assertEquals(sc.next(), $("INT", 0));
@@ -85,7 +84,7 @@ Deno.test("Scanner: fizzbuzz", () => {
   }
 
   fn fizzbuzz(start, end) {
-      var i = start;
+      i = start;
       while(true){
           if (i < end) {
               break;
@@ -124,7 +123,6 @@ Deno.test("Scanner: fizzbuzz", () => {
   assertEquals(sc.next(), $("IDENT", "end"));
   assertEquals(sc.next(), $("PARENTHES_CLOSE", ")"));
   assertEquals(sc.next(), $("BEGIN", "{"));
-  assertEquals(sc.next(), $("VARDEF", "var"));
   assertEquals(sc.next(), $("IDENT", "i"));
   assertEquals(sc.next(), $("ASSIGN", "="));
   assertEquals(sc.next(), $("IDENT", "start"));

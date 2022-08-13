@@ -2,7 +2,7 @@ export const $ = (type, value = null) => {
   return { type: type, value: value };
 };
 
-export function deepCopy(xs) {
+export function deep_copy(xs) {
   return JSON.parse(JSON.stringify(xs));
 }
 

@@ -52,35 +52,19 @@ export function parse(sc) {
 
   const funcargs = () => {
     const _funcargs = [];
-    while (match("INT", "STRING", "BOOL", "IDENT", "COMMA")) {
-      if (match("INT", "STRING", "BOOL", "IDENT")) {
-        _funcargs.push(expr());
-      } else {
+    while (match("IDENT")) {
+      _funcargs.push([take("IDENT")]);
+      if (match("COMMA")) {
         take("COMMA");
       }
     }
     return _funcargs;
   };
 
-  const vardef = () => {
-    const _vardef = [];
-
-    _vardef.push(take("VARDEF"));
-    _vardef.push([take("IDENT")]);
-    take("ASSIGN");
-    _vardef.push([expr()]);
-
-    return _vardef;
-  };
-
   const statlist = () => {
     const _statlist = [];
-    for (
-      let _statement = statement();
-      0 < _statement.length;
-      _statement = statement()
-    ) {
-      _statlist.push(_statement);
+    for (let smt = statement(); 0 < smt.length; smt = statement()) {
+      _statlist.push(smt);
     }
     return _statlist;
   };
@@ -88,10 +72,7 @@ export function parse(sc) {
   const statement = () => {
     const _statement = [];
 
-    if (match("VARDEF")) {
-      _statement.push(vardef());
-      take("SEMICOLON");
-    } else if (match("WHILE")) {
+    if (match("WHILE")) {
       _statement.push(call_while());
     } else if (match("IF")) {
       _statement.push(call_if());
@@ -119,10 +100,21 @@ export function parse(sc) {
     _funcall.push($("call_func"));
     _funcall.push(name);
     take("PARENTHES_OPEN");
-    _funcall.push(funcargs());
+    _funcall.push(callargs());
     take("PARENTHES_CLOSE");
 
     return _funcall;
+  };
+
+  const callargs = () => {
+    const _callargs = [];
+    while (match("INT", "STRING", "BOOL", "IDENT")) {
+      _callargs.push(expr());
+      if (match("COMMA")) {
+        take("COMMA");
+      }
+    }
+    return _callargs;
   };
 
   const assign = (name) => {
@@ -234,7 +226,5 @@ export function parse(sc) {
   };
 
   const ast = program();
-  // console.log(ast[0][3][0])
-  // console.log(ast[1][3][0])
   return ast;
 }

@@ -1,18 +1,25 @@
-<program>   := <funcdef>+
-<funcdef>   := "fn" <ident>"(" <ident>* ")" "{" <statlist> "}"
-<call_func> := <ident> "(" <funcargs> ")"
-<funcargs>  := (<expr>[,])*
-<statlist>  := <statement>(; <statement>)*
-<statement> := <call_func>
-// <block> --> {} <statlist> end
-<relation> --> <expression> <rel_op> <expression>
-<rel_op> --> > | < | = | <>| <= | >= |
-<expression> --> <expression> <add_op> <term> | <term>
-<term> --> <term> <mul_op> <factor> | <factor>
-<factor> --> <literal> | "(" <expression> ")" | <funccall>
-<literal> --> <ident> | <number> | <string>
-<number> --> [<unary_op>] NUMBER
-<string> --> "<any charactor>"
-<indent> --> <latter>(<latter> | <digit>)*
-<latter> --> a-zA-Z
-<digit> --> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+<program>       := <funcdef>+
+<funcdef>       := fn <ident> '(' <funcargs> ')' { <statlist> }'
+<funcargs>      := <ident>(, <ident>)*
+<statlist>      := <statement>;(<statement>;)*
+<statement>     := <call_func> | <call_if> | <call_while> | <assign> | <return> | <break>
+<call_func>     := <ident> '(' <literal>(, <literal>)*')'
+<call_if>       := if '('<relation>')' { <statlist> } [else (<statlist>|<call_if>]
+<call_while>    := while '('<relation>')' { <statlist> } 
+<assign>        := <ident> = <expression> 
+<return>        := return
+<break>         := break
+<relation>      := <bool> |<expression> <rel_op> <expression>
+<rel_op>        := > | < | == | != | <= | >= 
+<expression>    := <expression> <add_op> <term> | <term>
+<term>          := <term> <mul_op> <factor> | <factor>
+<factor>        := <literal> | "(" <expression> ")" | <funccall>
+<add_op>        := + | -
+<mul_op>        := * | / | %
+<string>        := "<any charactor>"
+<number>        := <digit>+
+<bool>          := true | false
+<literal>       := <number> | <string> | <bool> | <ident>
+<ident>         := <latter>(<latter> | <digit>)*
+<latter>        := [a-zA-Z]
+<digit>         := [0-9]

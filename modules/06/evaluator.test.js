@@ -20,11 +20,11 @@ Deno.test("apply: Hello World", () => {
   assertEquals(actual.stdout, ["Hello World"]);
 });
 
-Deno.test("apply: VAR", () => {
+Deno.test("apply: variable", () => {
   const actual = new Evaluator().apply(Parser.parse(
     new Scanner(`
       fn main() {
-        var msg = "var test.";
+        msg = "var test.";
         print(msg);
       }
     `),

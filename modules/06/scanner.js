@@ -14,8 +14,6 @@ export class Scanner {
           return $("BEGIN", word);
         case word == "}":
           return $("END", word);
-        case word == "var":
-          return $("VARDEF", word);
         case word == "while":
           return $("WHILE", word);
         case word == "if":

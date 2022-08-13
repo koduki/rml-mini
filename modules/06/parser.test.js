@@ -37,7 +37,7 @@ Deno.test("parse: FizzBuzz", () => {
       }
 
       fn fizzbuzz(start, end) {
-          var i = start;
+          i = start;
           while(true){
             if (i < end) {
               break;

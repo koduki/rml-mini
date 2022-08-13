@@ -1,4 +1,4 @@
-import { deepCopy } from "./util.js";
+import { deep_copy } from "./util.js";
 import Config from "./config.js";
 
 export class Evaluator {
@@ -14,10 +14,9 @@ export class Evaluator {
     };
 
     // 評価を開始
-    eval_funclist(global, ast);
+    eval_program(global, ast);
     // mainと付いている関数をエントリポイントとして実行
     global.func_table["main"]();
-    // console.log(global);
     return global;
   }
 }
@@ -26,7 +25,7 @@ class GoToError extends Error {}
 class ReturnError extends GoToError {}
 class BreakError extends GoToError {}
 
-function eval_funclist(global, ast) {
+function eval_program(global, ast) {
   for (let i = 0; i < ast.length; i++) {
     eval_funcdef(global, ast[i]);
   }
@@ -46,7 +45,7 @@ function eval_funcdef(global, ast) {
     }
 
     try {
-      eval_statementlist(global, env, deepCopy(ast).shift());
+      eval_statementlist(global, env, deep_copy(ast).shift());
     } catch (err) {
       if (err instanceof ReturnError) { // 例外では無く正常系。returnが投げられたら大域脱出
         return env.result;
@@ -68,23 +67,7 @@ function eval_statement(global, env, ast) {
 
   switch (token.type) {
     case "call_func": {
-      return eval_call_func(global, env, ast);
-    }
-    case "RETURN": {
-      env.result = eval_expr(global, env, ast.shift());
-      throw new ReturnError();
-    }
-    case "VARDEF": {
-      const name = ast.shift()[0].value;
-      const value = eval_expr(global, env, ast.shift()[0]);
-      env.var_table[name] = value;
-      return env.var_table[name];
-    }
-    case "ASSIGN": {
-      const name = ast.shift()[0].value;
-      const value = eval_expr(global, env, ast.shift());
-      env.var_table[name] = value;
-      return env.var_table[name];
+      return eval_call_func(global, deep_copy(env), ast);
     }
     case "IF": {
       return eval_if(global, env, ast);
@@ -92,11 +75,29 @@ function eval_statement(global, env, ast) {
     case "WHILE": {
       return eval_while(global, env, ast);
     }
+    case "ASSIGN": {
+      const name = ast.shift()[0].value;
+      const value = eval_expr(global, env, ast.shift());
+      env.var_table[name] = value;
+      return env.var_table[name];
+    }
     case "BREAK": {
       throw new BreakError();
     }
+    case "RETURN": {
+      env.result = eval_expr(global, env, ast.shift());
+      throw new ReturnError();
+    }
   }
   throw new Error("Unkown Error");
+}
+
+function eval_call_func(global, env, ast) {
+  const name = ast.shift().value;
+  const args = ast.shift();
+  const mapped_args = args.map((t) => eval_expr(global, deep_copy(env), t));
+
+  return global.func_table[name](mapped_args);
 }
 
 function eval_if(global, env, ast) {
@@ -119,13 +120,13 @@ function eval_if(global, env, ast) {
 function eval_while(global, env, ast) {
   try {
     while (true) {
-      const cloned_ast = deepCopy(ast);
+      const cloned_ast = deep_copy(ast);
       const guard = eval_relation(global, env, cloned_ast.shift());
       if (!guard) {
         break;
       }
       const block = cloned_ast.shift();
-      eval_statementlist(global, env, deepCopy(block));
+      eval_statementlist(global, env, block);
     }
   } catch (err) {
     if (!(err instanceof BreakError)) { // 例外では無く正常系。breakが投げられたら大域脱出
@@ -139,24 +140,36 @@ function eval_relation(global, env, ast) {
   switch (token.type) {
     case "OP_REL": {
       switch (token.value) {
-        case "==":
-          return eval_expr(global, env, ast.shift()) ==
-            eval_expr(global, env, ast.shift());
-        case "!=":
-          return eval_expr(global, env, ast.shift()) !=
-            eval_expr(global, env, ast.shift());
-        case "<":
-          return eval_expr(global, env, ast.shift()) <
-            eval_expr(global, env, ast.shift());
-        case ">":
-          return eval_expr(global, env, ast.shift()) >
-            eval_expr(global, env, ast.shift());
-        case "<=":
-          return eval_expr(global, env, ast.shift()) <=
-            eval_expr(global, env, ast.shift());
-        case ">=":
-          return eval_expr(global, env, ast.shift()) >=
-            eval_expr(global, env, ast.shift());
+        case "==": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x == y;
+        }
+        case "!=": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x != y;
+        }
+        case "<": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x < y;
+        }
+        case ">": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x > y;
+        }
+        case "<=": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x <= y;
+        }
+        case "": {
+          const x = eval_expr(global, env, ast.shift());
+          const y = eval_expr(global, env, ast.shift());
+          return x >= y;
+        }
         case "direct":
           return eval_expr(global, env, ast.shift());
       }
@@ -170,24 +183,29 @@ function eval_expr(global, env, ast) {
 
   switch (token.type) {
     case "add": {
-      return eval_expr(global, env, ast.shift()) +
-        eval_expr(global, env, ast.shift());
+      const x = eval_expr(global, env, ast.shift());
+      const y = eval_expr(global, env, ast.shift());
+      return x + y;
     }
     case "sub": {
-      return eval_expr(global, env, ast.shift()) -
-        eval_expr(global, env, ast.shift());
+      const x = eval_expr(global, env, ast.shift());
+      const y = eval_expr(global, env, ast.shift());
+      return x - y;
     }
     case "mul": {
-      return eval_expr(global, env, ast.shift()) *
-        eval_expr(global, env, ast.shift());
+      const x = eval_expr(global, env, ast.shift());
+      const y = eval_expr(global, env, ast.shift());
+      return x * y;
     }
     case "div": {
-      return eval_expr(global, env, ast.shift()) /
-        eval_expr(global, env, ast.shift());
+      const x = eval_expr(global, env, ast.shift());
+      const y = eval_expr(global, env, ast.shift());
+      return x / y;
     }
     case "mod": {
-      return eval_expr(global, env, ast.shift()) %
-        eval_expr(global, env, ast.shift());
+      const x = eval_expr(global, env, ast.shift());
+      const y = eval_expr(global, env, ast.shift());
+      return x % y;
     }
     case "call_func": {
       return eval_call_func(global, env, ast);
@@ -200,14 +218,6 @@ function eval_expr(global, env, ast) {
     case "BOOL":
       return token.value;
   }
-}
-
-function eval_call_func(global, env, ast) {
-  const name = ast.shift().value;
-  const args = ast.shift();
-  const mapped_args = args.map((t) => eval_expr(global, env, t));
-
-  return global.func_table[name](mapped_args);
 }
 
 function syscall_stdout(global, text) {

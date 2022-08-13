@@ -13,10 +13,10 @@ Deno.test("apply: Hello World", () => {
   assertEquals(actual, "Hello World");
 });
 
-Deno.test("apply: VAR", () => {
+Deno.test("apply: variable", () => {
   const actual = Interpriter.evaluate(`
       fn main() {
-        var msg = "var test.";
+        msg = "var test.";
         print(msg);
       }
     `);
@@ -26,7 +26,7 @@ Deno.test("apply: VAR", () => {
 Deno.test("apply: call-function", () => {
   const actual = Interpriter.evaluate(`
       fn main() {
-        var msg = "var test.";
+        msg = "var test.";
         say(msg);
       }
       fn say(message) {
@@ -39,11 +39,11 @@ Deno.test("apply: call-function", () => {
 Deno.test("apply: call-function2", () => {
   const actual = Interpriter.evaluate(`
       fn main() {
-        var msg = "start";
+        msg = "start";
         print(msg);
 
-        var sum1 = 3 + 4;
-        var sum2 = calc(1, 2) + sum1;
+        sum1 = 3 + 4;
+        sum2 = calc(1, 2) + sum1;
         print(sum2);
 
         msg = "done";
@@ -85,7 +85,7 @@ Deno.test("apply: IF", () => {
 Deno.test("apply: WHILE", () => {
   const actual = Interpriter.evaluate(`
       fn main() {
-        var i = 0;
+        i = 0;
         while(i<=10){
           print(i);
           i = i + 1;
@@ -98,7 +98,7 @@ Deno.test("apply: WHILE", () => {
 Deno.test("apply: WHILE-with-break", () => {
   const actual = Interpriter.evaluate(`
       fn main() {
-        var i = 0;
+        i = 0;
         while(true){
           if(10<i){
             break;
@@ -118,7 +118,7 @@ Deno.test("apply: FizzBuzz", () => {
     }
 
     fn fizzbuzz(start, end) {
-        var i = start;
+        i = start;
         while(i<=100){
           if(i % 15 == 0){
               print("FizzBuzz");
